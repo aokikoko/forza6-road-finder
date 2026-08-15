@@ -352,6 +352,9 @@ elements.zoomInButton.addEventListener("click", () => viewport.stepZoom(1));
 elements.resetViewButton.addEventListener("click", () => viewport.fit(true));
 elements.viewport.addEventListener("click", sampleAt);
 
+setViewMode("result");
+setBackgroundMode(DEFAULT_SETTINGS.grayscaleBackground ? "grayscale" : "color", false);
+
 if (backend === "canvas") {
   showToast("webglFallback");
 }

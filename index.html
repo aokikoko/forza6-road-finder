@@ -82,7 +82,8 @@
             <button type="button" data-background="grayscale" aria-pressed="false" data-i18n="backgroundGrayscale">灰度背景</button>
           </div>
         </div>
-        <button id="sampleButton" class="secondary-button full-width" type="button" disabled data-i18n="sampleColor">从地图点击取色</button>
+        <button id="sampleButton" class="secondary-button full-width" type="button" disabled aria-describedby="sampleHelp" data-i18n="sampleColor">从地图点击取色</button>
+        <p id="sampleHelp" class="field-help" data-i18n="sampleHelp">用于校准道路灰色。点击按钮后，再点击一段未探索道路的中心。</p>
         <button id="resetSettingsButton" class="text-button" type="button" data-i18n="resetSettings">恢复默认设置</button>
       </section>
 
