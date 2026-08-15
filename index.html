@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' blob: data:; media-src 'self' blob:; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="description" content="Find unexplored Forza Horizon roads locally in your browser.">
+  <title>Forza Road Finder</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Forza Road Finder">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>ROAD<span>FINDER</span></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="privacy-badge" data-i18n="privacyBadge">仅在本机处理</span>
+      <button id="languageButton" class="icon-button language-button" type="button" aria-label="Switch language">EN</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="control-panel" aria-label="Controls" data-i18n-aria="controlsLabel">
+      <section class="intro">
+        <p class="eyebrow" data-i18n="eyebrow">地图检查工具</p>
+        <h1 data-i18n="title">找到最后一段路</h1>
+        <p data-i18n="subtitle">载入完整地图截图，或捕获游戏窗口。像素不会离开你的浏览器。</p>
+      </section>
+
+      <section class="control-section">
+        <h2><span>01</span><span data-i18n="sourceHeading">选择画面</span></h2>
+        <div class="source-tabs" role="tablist" aria-label="Input source" data-i18n-aria="sourceTabsLabel">
+          <button id="imageTab" class="source-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="imagePanel" data-i18n="screenshotTab">截图</button>
+          <button id="captureTab" class="source-tab" type="button" role="tab" aria-selected="false" aria-controls="capturePanel" data-i18n="captureTab">实时捕获</button>
+        </div>
+
+        <div id="imagePanel" class="source-panel" role="tabpanel" aria-labelledby="imageTab">
+          <label id="dropZone" class="drop-zone" for="fileInput" tabindex="0">
+            <input id="fileInput" type="file" accept="image/*">
+            <span class="drop-icon" aria-hidden="true">+</span>
+            <strong data-i18n="dropTitle">载入地图截图</strong>
+            <span data-i18n="dropHint">选择、拖放或粘贴图片</span>
+          </label>
+        </div>
+
+        <div id="capturePanel" class="source-panel" role="tabpanel" aria-labelledby="captureTab" hidden>
+          <p class="capture-copy" data-i18n="captureCopy">浏览器会让你选择共享窗口。请选择 Forza Horizon，并避免共享整个屏幕。</p>
+          <button id="startCaptureButton" class="primary-button" type="button" data-i18n="startCapture">选择游戏窗口</button>
+          <div id="captureActions" class="capture-actions" hidden>
+            <button id="pauseCaptureButton" class="secondary-button" type="button" data-i18n="pause">暂停</button>
+            <button id="stopCaptureButton" class="danger-button" type="button" data-i18n="stop">停止</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="control-section">
+        <h2><span>02</span><span data-i18n="detectHeading">校准检测</span></h2>
+        <div class="field-grid">
+          <label class="color-field">
+            <span data-i18n="roadColor">道路灰色</span>
+            <span class="color-control"><input id="targetColor" type="color" value="#808080"><output id="targetColorValue">#808080</output></span>
+          </label>
+          <label class="color-field">
+            <span data-i18n="markerColor">标记颜色</span>
+            <span class="color-control"><input id="markerColor" type="color" value="#ff3b30"><output id="markerColorValue">#FF3B30</output></span>
+          </label>
+        </div>
+        <label class="range-field" for="tolerance">
+          <span><span data-i18n="tolerance">匹配容差</span><output id="toleranceValue">12</output></span>
+          <input id="tolerance" type="range" min="0" max="50" value="12">
+        </label>
+        <button id="sampleButton" class="secondary-button full-width" type="button" disabled data-i18n="sampleColor">从地图点击取色</button>
+        <button id="resetSettingsButton" class="text-button" type="button" data-i18n="resetSettings">恢复默认设置</button>
+      </section>
+
+      <section class="control-section view-controls">
+        <h2><span>03</span><span data-i18n="viewHeading">检查地图</span></h2>
+        <div class="segmented" role="group" aria-label="Display mode" data-i18n-aria="displayModeLabel">
+          <button type="button" data-view="original" data-i18n="original">原图</button>
+          <button class="is-active" type="button" data-view="result" data-i18n="result">结果</button>
+          <button type="button" data-view="compare" data-i18n="compare">对比</button>
+        </div>
+        <label id="compareField" class="range-field" for="comparePosition" hidden>
+          <span><span data-i18n="comparePosition">对比位置</span><output id="compareValue">50%</output></span>
+          <input id="comparePosition" type="range" min="0" max="100" value="50">
+        </label>
+      </section>
+    </aside>
+
+    <section class="workspace" aria-label="Map workspace" data-i18n-aria="workspaceLabel">
+      <div class="workspace-toolbar">
+        <div>
+          <span id="statusDot" class="status-dot"></span>
+          <span id="statusText" data-i18n="statusReady">等待地图</span>
+        </div>
+        <div class="zoom-actions">
+          <button id="zoomOutButton" class="icon-button" type="button" disabled aria-label="Zoom out" data-i18n-aria="zoomOut">−</button>
+          <output id="zoomValue">100%</output>
+          <button id="zoomInButton" class="icon-button" type="button" disabled aria-label="Zoom in" data-i18n-aria="zoomIn">+</button>
+          <button id="resetViewButton" class="reset-view-button" type="button" disabled data-i18n="resetView">适合窗口</button>
+        </div>
+      </div>
+
+      <div id="viewport" class="viewport">
+        <div id="stage" class="stage">
+          <canvas id="resultCanvas"></canvas>
+          <canvas id="originalCanvas"></canvas>
+          <div id="compareLine" class="compare-line" hidden></div>
+        </div>
+        <div id="emptyState" class="empty-state">
+          <span class="map-glyph" aria-hidden="true"></span>
+          <strong data-i18n="emptyTitle">地图会显示在这里</strong>
+          <p data-i18n="emptyHint">建议先在游戏中隐藏图标，并将地图缩放到完整区域。</p>
+        </div>
+        <div id="sampleCursor" class="sample-cursor" hidden data-i18n="sampleCursor">点击未探索道路</div>
+      </div>
+
+      <footer class="workspace-footer">
+        <span id="imageMeta">—</span>
+        <span data-i18n="privacyFooter">无上传 · 无存储 · 无遥测</span>
+      </footer>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <video id="captureVideo" muted playsinline hidden></video>
+  <noscript>This tool requires JavaScript. / 此工具需要 JavaScript。</noscript>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
