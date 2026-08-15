@@ -17,16 +17,48 @@ uniform sampler2D u_image;
 uniform vec3 u_target;
 uniform vec3 u_marker;
 uniform float u_tolerance;
+uniform vec2 u_texelSize;
+uniform int u_noiseFilter;
+uniform bool u_grayscaleBackground;
 in vec2 v_texCoord;
 out vec4 outColor;
 
+bool colorMatches(vec3 color) {
+  vec3 delta = (color - u_target) * 255.0;
+  float distanceValue = sqrt(dot(delta * delta, vec3(0.299, 0.587, 0.114)));
+  return distanceValue <= u_tolerance;
+}
+
 void main() {
   vec4 source = texture(u_image, v_texCoord);
-  vec3 delta = (source.rgb - u_target) * 255.0;
-  float distanceValue = sqrt(dot(delta * delta, vec3(0.299, 0.587, 0.114)));
-  outColor = distanceValue <= u_tolerance
-    ? vec4(u_marker, source.a)
-    : source;
+  bool shouldMark = colorMatches(source.rgb);
+
+  if (shouldMark && u_noiseFilter > 0) {
+    int matchingNeighbors = 0;
+    for (int offsetY = -1; offsetY <= 1; offsetY++) {
+      for (int offsetX = -1; offsetX <= 1; offsetX++) {
+        if (offsetX == 0 && offsetY == 0) {
+          continue;
+        }
+        vec2 neighborCoord = v_texCoord + vec2(float(offsetX), float(offsetY)) * u_texelSize;
+        bool inBounds = all(greaterThanEqual(neighborCoord, vec2(0.0)))
+          && all(lessThanEqual(neighborCoord, vec2(1.0)));
+        if (inBounds && colorMatches(texture(u_image, neighborCoord).rgb)) {
+          matchingNeighbors++;
+        }
+      }
+    }
+    shouldMark = matchingNeighbors >= u_noiseFilter;
+  }
+
+  if (shouldMark) {
+    outColor = vec4(u_marker, source.a);
+  } else if (u_grayscaleBackground) {
+    float luma = dot(source.rgb, vec3(0.299, 0.587, 0.114));
+    outColor = vec4(vec3(luma), source.a);
+  } else {
+    outColor = source;
+  }
 }`;
 
 function compileShader(gl, type, source) {
@@ -103,6 +135,9 @@ class WebGlProcessor {
     this.targetLocation = gl.getUniformLocation(this.program, "u_target");
     this.markerLocation = gl.getUniformLocation(this.program, "u_marker");
     this.toleranceLocation = gl.getUniformLocation(this.program, "u_tolerance");
+    this.texelSizeLocation = gl.getUniformLocation(this.program, "u_texelSize");
+    this.noiseFilterLocation = gl.getUniformLocation(this.program, "u_noiseFilter");
+    this.grayscaleBackgroundLocation = gl.getUniformLocation(this.program, "u_grayscaleBackground");
 
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -128,6 +163,9 @@ class WebGlProcessor {
     gl.uniform3fv(this.targetLocation, target);
     gl.uniform3fv(this.markerLocation, marker);
     gl.uniform1f(this.toleranceLocation, settings.tolerance);
+    gl.uniform2f(this.texelSizeLocation, 1 / width, 1 / height);
+    gl.uniform1i(this.noiseFilterLocation, settings.noiseFilter);
+    gl.uniform1i(this.grayscaleBackgroundLocation, settings.grayscaleBackground ? 1 : 0);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
 
@@ -155,18 +193,60 @@ class CanvasProcessor {
     const frame = this.context.getImageData(0, 0, width, height);
     const target = hexToRgb(settings.targetColor);
     const marker = hexToRgb(settings.markerColor);
+    const matchMask = new Uint8Array(width * height);
 
-    for (let offset = 0; offset < frame.data.length; offset += 4) {
-      if (matchesColor(
-        frame.data[offset],
-        frame.data[offset + 1],
-        frame.data[offset + 2],
+    for (let pixelIndex = 0; pixelIndex < matchMask.length; pixelIndex++) {
+      const dataOffset = pixelIndex * 4;
+      matchMask[pixelIndex] = matchesColor(
+        frame.data[dataOffset],
+        frame.data[dataOffset + 1],
+        frame.data[dataOffset + 2],
         target,
         settings.tolerance
-      )) {
-        frame.data[offset] = marker[0];
-        frame.data[offset + 1] = marker[1];
-        frame.data[offset + 2] = marker[2];
+      ) ? 1 : 0;
+    }
+
+    for (let pixelIndex = 0; pixelIndex < matchMask.length; pixelIndex++) {
+      const dataOffset = pixelIndex * 4;
+      let shouldMark = matchMask[pixelIndex] === 1;
+
+      if (shouldMark && settings.noiseFilter > 0) {
+        const pixelX = pixelIndex % width;
+        const pixelY = Math.floor(pixelIndex / width);
+        let matchingNeighbors = 0;
+
+        for (let offsetY = -1; offsetY <= 1; offsetY++) {
+          for (let offsetX = -1; offsetX <= 1; offsetX++) {
+            if (offsetX === 0 && offsetY === 0) {
+              continue;
+            }
+            const neighborX = pixelX + offsetX;
+            const neighborY = pixelY + offsetY;
+            if (
+              neighborX >= 0 && neighborX < width
+              && neighborY >= 0 && neighborY < height
+              && matchMask[neighborY * width + neighborX]
+            ) {
+              matchingNeighbors++;
+            }
+          }
+        }
+        shouldMark = matchingNeighbors >= settings.noiseFilter;
+      }
+
+      if (shouldMark) {
+        frame.data[dataOffset] = marker[0];
+        frame.data[dataOffset + 1] = marker[1];
+        frame.data[dataOffset + 2] = marker[2];
+      } else if (settings.grayscaleBackground) {
+        const luma = Math.round(
+          0.299 * frame.data[dataOffset]
+          + 0.587 * frame.data[dataOffset + 1]
+          + 0.114 * frame.data[dataOffset + 2]
+        );
+        frame.data[dataOffset] = luma;
+        frame.data[dataOffset + 1] = luma;
+        frame.data[dataOffset + 2] = luma;
       }
     }
     this.context.putImageData(frame, 0, 0);

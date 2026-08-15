@@ -15,9 +15,11 @@ A zero-build, local-only browser tool for highlighting unexplored roads on a For
 
 1. Open the site in a current Chrome or Edge browser.
 2. Load a full-map screenshot by choosing, dropping, or pasting an image; or select **Live capture** and choose the Forza Horizon window in the browser dialog.
-3. Adjust **Road grey** and **Match tolerance** until unexplored road segments are isolated.
-4. Use **Pick color from map** and click an unexplored road when the default grey does not match your map.
-5. Switch between the original, result, and comparison views, then zoom and pan to inspect small segments.
+3. Use **Pick color from map** and click the center of a known unexplored road when the default grey does not match your map.
+4. Start with **Match tolerance** between `2` and `5`, then raise it one step at a time only when road pixels are missing. `0` requires an exact RGB match; `50` accepts a very broad range and will usually create many false matches.
+5. Keep **Neighborhood filter** at `2` to suppress isolated matching pixels. Set it to `0` to disable filtering when checking very thin road segments.
+6. Choose **Original color** for the unchanged map background, or **Grayscale** to desaturate only unmatched pixels and make the marker color stand out. This changes presentation, not detection.
+7. Switch between the original, result, and comparison views, then zoom and pan to inspect small segments.
 
 For better results, hide map icons in the game and zoom out until the entire map is visible.
 
@@ -39,7 +41,8 @@ The static server only serves files from this directory. It is not part of the p
 - Replace one screenshot with another and confirm the new map renders at the correct dimensions.
 - Start live capture, choose the game window, pause, resume, and stop it.
 - Stop sharing from the browser's own sharing indicator and confirm the page reports that capture stopped.
-- Change the target color, marker color, and tolerance and confirm the result updates immediately.
+- Change the target color, marker color, tolerance, and neighborhood filter and confirm the result updates immediately.
+- Switch the result background between original color and grayscale. Confirm markers do not change and the original view always remains full-color.
 - Pick a color from the original map and confirm the target swatch changes.
 - Check original, result, and comparison views at several comparison positions.
 - Test wheel zoom, pointer drag, touch pinch, and **Fit view**.

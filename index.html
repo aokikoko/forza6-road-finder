@@ -68,9 +68,20 @@
           </label>
         </div>
         <label class="range-field" for="tolerance">
-          <span><span data-i18n="tolerance">匹配容差</span><output id="toleranceValue">12</output></span>
-          <input id="tolerance" type="range" min="0" max="50" value="12">
+          <span><span data-i18n="tolerance">匹配容差</span><output id="toleranceValue">4</output></span>
+          <input id="tolerance" type="range" min="0" max="50" value="4">
         </label>
+        <label class="range-field" for="noiseFilter">
+          <span><span data-i18n="noiseFilter">邻域去噪</span><output id="noiseFilterValue">2</output></span>
+          <input id="noiseFilter" type="range" min="0" max="4" value="2">
+        </label>
+        <div class="option-field">
+          <span data-i18n="backgroundMode">结果背景</span>
+          <div class="segmented segmented-two" role="group" aria-label="Result background" data-i18n-aria="backgroundModeLabel">
+            <button class="is-active" type="button" data-background="color" aria-pressed="true" data-i18n="backgroundColor">原始颜色</button>
+            <button type="button" data-background="grayscale" aria-pressed="false" data-i18n="backgroundGrayscale">灰度背景</button>
+          </div>
+        </div>
         <button id="sampleButton" class="secondary-button full-width" type="button" disabled data-i18n="sampleColor">从地图点击取色</button>
         <button id="resetSettingsButton" class="text-button" type="button" data-i18n="resetSettings">恢复默认设置</button>
       </section>

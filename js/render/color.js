@@ -1,7 +1,9 @@
 export const DEFAULT_SETTINGS = Object.freeze({
   targetColor: "#808080",
   markerColor: "#ff3b30",
-  tolerance: 12
+  tolerance: 4,
+  noiseFilter: 2,
+  grayscaleBackground: false
 });
 
 export function hexToRgb(hex) {

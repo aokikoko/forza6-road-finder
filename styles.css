@@ -301,7 +301,8 @@ h1 {
 }
 
 .color-field,
-.range-field {
+.range-field,
+.option-field {
   display: grid;
   gap: 8px;
   color: var(--muted);
@@ -330,6 +331,10 @@ input[type="color"] {
 }
 
 .range-field {
+  margin-top: 16px;
+}
+
+.option-field {
   margin-top: 16px;
 }
 
@@ -365,6 +370,10 @@ input[type="range"] {
 
 .segmented {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.segmented.segmented-two {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .workspace {
