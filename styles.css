@@ -301,7 +301,8 @@ h1 {
 }
 
 .color-field,
-.range-field {
+.range-field,
+.option-field {
   display: grid;
   gap: 8px;
   color: var(--muted);
@@ -333,6 +334,10 @@ input[type="color"] {
   margin-top: 16px;
 }
 
+.option-field {
+  margin-top: 16px;
+}
+
 .range-field > span {
   display: flex;
   justify-content: space-between;
@@ -352,6 +357,13 @@ input[type="range"] {
   margin-top: 15px;
 }
 
+.field-help {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
 .text-button {
   margin-top: 10px;
   padding: 2px 0;
@@ -365,6 +377,10 @@ input[type="range"] {
 
 .segmented {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.segmented.segmented-two {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .workspace {

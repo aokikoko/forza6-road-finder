@@ -1,15 +1,16 @@
-import { createI18n } from "./i18n.js";
-import { decodeImageFile, imageFromClipboard } from "./input/image-source.js";
-import { CaptureSource } from "./input/capture-source.js";
-import { DEFAULT_SETTINGS, rgbToHex } from "./render/color.js";
-import { createProcessor } from "./render/processor.js";
-import { ViewportController } from "./view/viewport.js";
+import { createI18n } from "./i18n.js?v=20260815-2";
+import { decodeImageFile, imageFromClipboard } from "./input/image-source.js?v=20260815-2";
+import { CaptureSource } from "./input/capture-source.js?v=20260815-2";
+import { DEFAULT_SETTINGS, rgbToHex } from "./render/color.js?v=20260815-2";
+import { createProcessor } from "./render/processor.js?v=20260815-2";
+import { ViewportController } from "./view/viewport.js?v=20260815-2";
 
 const elements = Object.fromEntries([
   "languageButton", "imageTab", "captureTab", "imagePanel", "capturePanel",
   "dropZone", "fileInput", "startCaptureButton", "captureActions",
   "pauseCaptureButton", "stopCaptureButton", "targetColor", "targetColorValue",
-  "markerColor", "markerColorValue", "tolerance", "toleranceValue", "sampleButton",
+  "markerColor", "markerColorValue", "tolerance", "toleranceValue", "noiseFilter",
+  "noiseFilterValue", "sampleButton",
   "resetSettingsButton", "compareField", "comparePosition", "compareValue",
   "statusDot", "statusText", "zoomOutButton", "zoomInButton", "zoomValue",
   "resetViewButton", "viewport", "stage", "resultCanvas", "originalCanvas",
@@ -195,9 +196,11 @@ function updateSettings() {
   settings.targetColor = elements.targetColor.value;
   settings.markerColor = elements.markerColor.value;
   settings.tolerance = Number(elements.tolerance.value);
+  settings.noiseFilter = Number(elements.noiseFilter.value);
   elements.targetColorValue.value = settings.targetColor.toUpperCase();
   elements.markerColorValue.value = settings.markerColor.toUpperCase();
   elements.toleranceValue.value = String(settings.tolerance);
+  elements.noiseFilterValue.value = String(settings.noiseFilter);
   if (source && !capture.paused) {
     render();
   }
@@ -207,7 +210,21 @@ function resetSettings() {
   elements.targetColor.value = DEFAULT_SETTINGS.targetColor;
   elements.markerColor.value = DEFAULT_SETTINGS.markerColor;
   elements.tolerance.value = String(DEFAULT_SETTINGS.tolerance);
+  elements.noiseFilter.value = String(DEFAULT_SETTINGS.noiseFilter);
+  setBackgroundMode(DEFAULT_SETTINGS.grayscaleBackground ? "grayscale" : "color", false);
   updateSettings();
+}
+
+function setBackgroundMode(mode, rerender = true) {
+  settings.grayscaleBackground = mode === "grayscale";
+  document.querySelectorAll("[data-background]").forEach((button) => {
+    const isActive = button.dataset.background === mode;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  if (rerender && source && !capture.paused) {
+    render();
+  }
 }
 
 function setInputTab(tab) {
@@ -318,8 +335,11 @@ elements.pauseCaptureButton.addEventListener("click", () => {
   }
 });
 elements.stopCaptureButton.addEventListener("click", () => stopCapture());
-[elements.targetColor, elements.markerColor, elements.tolerance].forEach((input) => {
+[elements.targetColor, elements.markerColor, elements.tolerance, elements.noiseFilter].forEach((input) => {
   input.addEventListener("input", updateSettings);
+});
+document.querySelectorAll("[data-background]").forEach((button) => {
+  button.addEventListener("click", () => setBackgroundMode(button.dataset.background));
 });
 elements.sampleButton.addEventListener("click", beginSampling);
 elements.resetSettingsButton.addEventListener("click", resetSettings);
@@ -331,6 +351,9 @@ elements.zoomOutButton.addEventListener("click", () => viewport.stepZoom(-1));
 elements.zoomInButton.addEventListener("click", () => viewport.stepZoom(1));
 elements.resetViewButton.addEventListener("click", () => viewport.fit(true));
 elements.viewport.addEventListener("click", sampleAt);
+
+setViewMode("result");
+setBackgroundMode(DEFAULT_SETTINGS.grayscaleBackground ? "grayscale" : "color", false);
 
 if (backend === "canvas") {
   showToast("webglFallback");
