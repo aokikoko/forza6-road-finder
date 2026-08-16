@@ -1,9 +1,9 @@
-import { createI18n } from "./i18n.js?v=20260816-2";
-import { decodeImageFile, imageFromClipboard } from "./input/image-source.js?v=20260816-2";
-import { CaptureSource } from "./input/capture-source.js?v=20260816-2";
-import { DEFAULT_SETTINGS, rgbToHex } from "./render/color.js?v=20260816-2";
-import { createProcessor } from "./render/processor.js?v=20260816-2";
-import { ViewportController } from "./view/viewport.js?v=20260816-2";
+import { createI18n } from "./i18n.js?v=20260816-3";
+import { decodeImageFile, imageFromClipboard } from "./input/image-source.js?v=20260816-3";
+import { CaptureSource } from "./input/capture-source.js?v=20260816-3";
+import { DEFAULT_SETTINGS, rgbToHex } from "./render/color.js?v=20260816-3";
+import { createProcessor } from "./render/processor.js?v=20260816-3";
+import { ViewportController } from "./view/viewport.js?v=20260816-3";
 
 const elements = Object.fromEntries([
   "languageButton", "imageTab", "captureTab", "imagePanel", "capturePanel",

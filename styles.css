@@ -56,9 +56,10 @@ button:disabled {
 
 .topbar {
   height: 58px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
   padding: 0 18px;
   color: #fff;
   background: var(--ink);
@@ -98,12 +99,31 @@ button:disabled {
   clip-path: polygon(0 0, 100% 0, 74% 100%, 0 100%, 24% 50%);
 }
 
+.site-domain {
+  padding: 5px 9px 4px;
+  color: #fff;
+  border-bottom: 2px solid var(--signal);
+  font-family: Impact, "Microsoft YaHei UI", sans-serif;
+  font-size: 17px;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-domain:hover {
+  color: var(--signal);
+}
+
 .topbar-actions,
 .zoom-actions,
 .capture-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.topbar-actions {
+  justify-self: end;
 }
 
 .privacy-badge {
@@ -605,6 +625,19 @@ input[type="range"] {
 }
 
 @media (max-width: 520px) {
+  .topbar {
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-mark {
+    display: none;
+  }
+
   .brand-name {
     display: grid;
     gap: 0;
@@ -617,6 +650,11 @@ input[type="range"] {
 
   .brand-name > strong {
     font-size: 10px;
+  }
+
+  .site-domain {
+    padding-inline: 4px;
+    font-size: 14px;
   }
 
   .privacy-badge {
