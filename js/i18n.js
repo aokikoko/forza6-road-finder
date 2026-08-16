@@ -1,5 +1,6 @@
 const messages = {
   zh: {
+    languageSwitch: "切换语言",
     privacyBadge: "仅在本机处理",
     controlsLabel: "检测控制",
     eyebrow: "地图检查工具",
@@ -60,6 +61,7 @@ const messages = {
     pasteHint: "剪贴板里没有可用图片。"
   },
   en: {
+    languageSwitch: "Switch language",
     privacyBadge: "Processed on this device",
     controlsLabel: "Detection controls",
     eyebrow: "Map inspection tool",
@@ -118,18 +120,150 @@ const messages = {
     webglFallback: "WebGL2 is unavailable. Switched to slower CPU processing.",
     sampled: "The target road color was updated.",
     pasteHint: "No usable image was found on the clipboard."
+  },
+  ja: {
+    languageSwitch: "言語を切り替え",
+    privacyBadge: "この端末内で処理",
+    controlsLabel: "検出コントロール",
+    eyebrow: "マップ確認ツール",
+    title: "最後の道路を見つける",
+    subtitle: "マップ全体のスクリーンショットを読み込むか、ゲームウィンドウをキャプチャします。画像データがブラウザ外に送信されることはありません。",
+    sourceHeading: "画面を選択",
+    sourceTabsLabel: "入力元",
+    screenshotTab: "スクリーンショット",
+    captureTab: "ライブキャプチャ",
+    dropTitle: "マップ画像を読み込む",
+    dropHint: "画像を選択、ドロップ、または貼り付け",
+    captureCopy: "ブラウザで共有する画面を選択します。画面全体ではなく Forza Horizon のウィンドウを選んでください。",
+    startCapture: "ゲームウィンドウを選択",
+    pause: "一時停止",
+    resume: "再開",
+    stop: "停止",
+    detectHeading: "検出を調整",
+    roadColor: "道路のグレー",
+    markerColor: "マーカー色",
+    tolerance: "色の許容範囲",
+    noiseFilter: "近傍ノイズ除去",
+    backgroundMode: "結果の背景",
+    backgroundModeLabel: "結果の背景表示",
+    backgroundColor: "元の色",
+    backgroundGrayscale: "グレースケール",
+    sampleColor: "マップから色を取得",
+    sampleHelp: "道路のグレーを調整します。ボタンを押してから、未走行道路の中央をクリックしてください。",
+    resetSettings: "初期設定に戻す",
+    viewHeading: "マップを確認",
+    displayModeLabel: "表示モード",
+    original: "元画像",
+    result: "結果",
+    compare: "比較",
+    comparePosition: "比較位置",
+    workspaceLabel: "マップ表示領域",
+    statusReady: "マップを待機中",
+    statusLoading: "画像を読み込み中",
+    statusImage: "スクリーンショット準備完了",
+    statusRequesting: "ブラウザの許可を待機中",
+    statusLive: "ライブ映像を端末内で処理中",
+    statusPaused: "ライブ映像を一時停止中",
+    statusStopped: "ライブキャプチャを停止しました",
+    zoomOut: "縮小",
+    zoomIn: "拡大",
+    resetView: "全体を表示",
+    emptyTitle: "ここにマップが表示されます",
+    emptyHint: "ゲーム内のマップアイコンを非表示にし、マップ全体が見えるまで縮小することをおすすめします。",
+    sampleCursor: "未走行道路をクリック",
+    privacyFooter: "アップロードなし · 保存なし · テレメトリなし",
+    imageError: "この画像を読み込めませんでした。一般的な画像形式を選択してください。",
+    imageTypeError: "画像ファイルを選択してください。",
+    captureUnsupported: "このブラウザではウィンドウキャプチャを使用できません。最新版の Chrome または Edge を使用してください。",
+    captureSecure: "ウィンドウキャプチャには HTTPS または localhost が必要です。",
+    captureDenied: "共有が許可されませんでした。画面の内容は読み取られていません。",
+    captureError: "キャプチャを開始できませんでした。再試行してゲームウィンドウを選択してください。",
+    webglFallback: "WebGL2 を使用できないため、低速な CPU 処理に切り替えました。",
+    sampled: "道路の対象色を更新しました。",
+    pasteHint: "クリップボードに使用できる画像がありません。"
+  },
+  ko: {
+    languageSwitch: "언어 전환",
+    privacyBadge: "이 기기에서만 처리",
+    controlsLabel: "감지 설정",
+    eyebrow: "지도 확인 도구",
+    title: "마지막 도로 찾기",
+    subtitle: "전체 지도 스크린샷을 불러오거나 게임 창을 캡처하세요. 픽셀 데이터는 브라우저 밖으로 전송되지 않습니다.",
+    sourceHeading: "화면 선택",
+    sourceTabsLabel: "입력 소스",
+    screenshotTab: "스크린샷",
+    captureTab: "실시간 캡처",
+    dropTitle: "지도 스크린샷 불러오기",
+    dropHint: "이미지를 선택하거나 끌어 놓거나 붙여넣기",
+    captureCopy: "브라우저에서 공유할 창을 선택합니다. 전체 화면 대신 Forza Horizon 창을 선택하세요.",
+    startCapture: "게임 창 선택",
+    pause: "일시 정지",
+    resume: "계속",
+    stop: "중지",
+    detectHeading: "감지 보정",
+    roadColor: "도로 회색",
+    markerColor: "표시 색상",
+    tolerance: "색상 허용 범위",
+    noiseFilter: "주변 노이즈 제거",
+    backgroundMode: "결과 배경",
+    backgroundModeLabel: "결과 배경 표시 방식",
+    backgroundColor: "원본 색상",
+    backgroundGrayscale: "회색조",
+    sampleColor: "지도에서 색상 선택",
+    sampleHelp: "도로 회색을 보정합니다. 버튼을 누른 다음 미탐험 도로의 중앙을 클릭하세요.",
+    resetSettings: "기본 설정 복원",
+    viewHeading: "지도 확인",
+    displayModeLabel: "표시 모드",
+    original: "원본",
+    result: "결과",
+    compare: "비교",
+    comparePosition: "비교 위치",
+    workspaceLabel: "지도 작업 영역",
+    statusReady: "지도 대기 중",
+    statusLoading: "이미지 불러오는 중",
+    statusImage: "스크린샷 준비 완료",
+    statusRequesting: "브라우저 권한 대기 중",
+    statusLive: "실시간 화면을 기기에서 처리 중",
+    statusPaused: "실시간 화면 일시 정지됨",
+    statusStopped: "실시간 캡처가 중지됨",
+    zoomOut: "축소",
+    zoomIn: "확대",
+    resetView: "화면에 맞추기",
+    emptyTitle: "여기에 지도가 표시됩니다",
+    emptyHint: "게임에서 지도 아이콘을 숨기고 전체 지도가 보일 때까지 축소하는 것을 권장합니다.",
+    sampleCursor: "미탐험 도로 클릭",
+    privacyFooter: "업로드 없음 · 저장 없음 · 원격 측정 없음",
+    imageError: "이미지를 읽을 수 없습니다. 일반적인 이미지 형식을 선택하세요.",
+    imageTypeError: "이미지 파일을 선택하세요.",
+    captureUnsupported: "이 브라우저는 창 캡처를 지원하지 않습니다. 최신 Chrome 또는 Edge를 사용하세요.",
+    captureSecure: "창 캡처에는 HTTPS 또는 localhost가 필요합니다.",
+    captureDenied: "공유 권한이 허용되지 않았습니다. 화면 내용은 읽지 않았습니다.",
+    captureError: "캡처를 시작할 수 없습니다. 다시 시도하고 게임 창을 선택하세요.",
+    webglFallback: "WebGL2를 사용할 수 없어 더 느린 CPU 처리로 전환했습니다.",
+    sampled: "대상 도로 색상을 업데이트했습니다.",
+    pasteHint: "클립보드에 사용할 수 있는 이미지가 없습니다."
   }
 };
 
+const languageOrder = ["zh", "en", "ja", "ko"];
+const languageTags = { zh: "zh-CN", en: "en", ja: "ja", ko: "ko" };
+const languageLabels = { zh: "中文", en: "EN", ja: "日本語", ko: "한국어" };
+
 export function createI18n() {
-  let language = navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+  const browserLanguage = navigator.language.toLowerCase().split("-")[0];
+  let language = languageOrder.includes(browserLanguage) ? browserLanguage : "en";
+
+  function nextLanguage() {
+    const nextIndex = (languageOrder.indexOf(language) + 1) % languageOrder.length;
+    return languageOrder[nextIndex];
+  }
 
   function translate(key) {
     return messages[language][key] ?? messages.en[key] ?? key;
   }
 
   function apply() {
-    document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+    document.documentElement.lang = languageTags[language];
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       element.textContent = translate(element.dataset.i18n);
     });
@@ -143,8 +277,11 @@ export function createI18n() {
     get language() {
       return language;
     },
+    get nextLanguageLabel() {
+      return languageLabels[nextLanguage()];
+    },
     toggle() {
-      language = language === "zh" ? "en" : "zh";
+      language = nextLanguage();
       apply();
       return language;
     },

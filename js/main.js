@@ -1,9 +1,9 @@
-import { createI18n } from "./i18n.js?v=20260815-2";
-import { decodeImageFile, imageFromClipboard } from "./input/image-source.js?v=20260815-2";
-import { CaptureSource } from "./input/capture-source.js?v=20260815-2";
-import { DEFAULT_SETTINGS, rgbToHex } from "./render/color.js?v=20260815-2";
-import { createProcessor } from "./render/processor.js?v=20260815-2";
-import { ViewportController } from "./view/viewport.js?v=20260815-2";
+import { createI18n } from "./i18n.js?v=20260816-1";
+import { decodeImageFile, imageFromClipboard } from "./input/image-source.js?v=20260816-1";
+import { CaptureSource } from "./input/capture-source.js?v=20260816-1";
+import { DEFAULT_SETTINGS, rgbToHex } from "./render/color.js?v=20260816-1";
+import { createProcessor } from "./render/processor.js?v=20260816-1";
+import { ViewportController } from "./view/viewport.js?v=20260816-1";
 
 const elements = Object.fromEntries([
   "languageButton", "imageTab", "captureTab", "imagePanel", "capturePanel",
@@ -19,7 +19,16 @@ const elements = Object.fromEntries([
 
 const i18n = createI18n();
 i18n.apply();
-elements.languageButton.textContent = i18n.language === "zh" ? "EN" : "中";
+
+function updateLanguageButton() {
+  elements.languageButton.textContent = i18n.nextLanguageLabel;
+  elements.languageButton.setAttribute(
+    "aria-label",
+    `${i18n.translate("languageSwitch")}: ${i18n.nextLanguageLabel}`
+  );
+}
+
+updateLanguageButton();
 
 const settings = { ...DEFAULT_SETTINGS };
 const originalContext = elements.originalCanvas.getContext("2d", { willReadFrequently: true });
@@ -289,8 +298,8 @@ function sampleAt(event) {
 }
 
 elements.languageButton.addEventListener("click", () => {
-  const language = i18n.toggle();
-  elements.languageButton.textContent = language === "zh" ? "EN" : "中";
+  i18n.toggle();
+  updateLanguageButton();
   elements.pauseCaptureButton.dataset.i18n = capture.paused ? "resume" : "pause";
   elements.pauseCaptureButton.textContent = i18n.translate(elements.pauseCaptureButton.dataset.i18n);
 });
