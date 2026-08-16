@@ -1,4 +1,4 @@
-# Forza Road Finder
+# Forza Horizon 6 Road Finder
 
 A zero-build, local-only browser tool for highlighting unexplored roads on a Forza Horizon map.
 

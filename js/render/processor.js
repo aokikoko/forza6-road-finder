@@ -1,4 +1,4 @@
-import { hexToRgb, matchesColor } from "./color.js?v=20260816-1";
+import { hexToRgb, matchesColor } from "./color.js?v=20260816-2";
 
 const vertexShaderSource = `#version 300 es
 in vec2 a_position;

@@ -245,7 +245,7 @@ const messages = {
   }
 };
 
-const languageOrder = ["zh", "en", "ja", "ko"];
+const languageOrder = ["en", "zh", "ja", "ko"];
 const languageTags = { zh: "zh-CN", en: "en", ja: "ja", ko: "ko" };
 const languageLabels = { zh: "中文", en: "EN", ja: "日本語", ko: "한국어" };
 
